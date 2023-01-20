@@ -1,0 +1,49 @@
+:root {
+	--cell-size: 100px;
+
+	--color: #81c3fd; /* for hover */
+	--color-set: #0275d8; /* when set */
+	--l: 10px; /* X line-width */
+}
+
+body {
+	margin: 0;
+}
+
+.Board {
+	width: 100vw;
+	height: 50vh;
+	display: grid;
+	justify-content: center;
+	align-content: center;
+	justify-items: center;
+	align-items: center;
+	grid-template-columns: repeat(3, auto)
+}
+
+.Cell {
+	font-size: 60px;
+	width: var(--cell-size);
+	height: var(--cell-size);
+	border: 1px solid black;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	cursor: pointer;
+}
+
+.winning-message{
+	text-align: center;
+	position: static;
+	font-size: 40px;
+}
+
+#turn{
+	text-align: center;
+}
+
+
+#Tic-Tac-Toe-Game{
+	text-align: center;
+}
