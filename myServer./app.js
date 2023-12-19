@@ -3,24 +3,42 @@ const app = express()
 const fs = require('fs')
 var cors = require('cors')
 const { errorMonitor } = require('events')
-// const bp = require('body-parser')
 app.use(express.json())
-// app.use(bp.urlencoded({ extended: true }))
-
 app.use(cors())
-app.get('/', function(req, res) {
-    const file = fs.readFileSync('historyGames.json');
-    const history = JSON.parse(file); // back to object
-   res.send(history)
-  });
+const MongoClient = require('mongodb').MongoClient;
+const bodyParser = require('body-parser');
 
-app.post('/', function(req, res) {
-    const file = fs.writeFileSync('historyGames.json', JSON.stringify(req.body),(err)=>{
-      if(err) throw err;
-      console.log('added data');
-    });
-    res.send("ok");
+const port = 3000;
+
+app.use(bodyParser.json());
+
+const mongoUrl = 'mongodb://localhost:27017/tictactoe';
+
+app.put('/update-data/', async (req, res) => {
+  const newData = req.body; 
+  const client = new MongoClient(mongoUrl);
+
+  if (Object.keys(newData).length != 0){
+    try {
+      await client.connect();
+
+      const db = client.db();
+      const collection = db.collection('games');
+      
+      //console.log(newData)
+      await collection.insertOne( newData );
+
+      res.status(200).send('Data updated successfully');
+    } catch (error) {
+      console.error('Error updating data:', error);
+      res.status(500).send('Internal Server Error');
+    } finally {
+      client.close(); // Close the MongoDB connection
+    }
+  }
 });
+
+
 
   // catch 404 and forward to error handler
   app.use(function(req, res, next) {
@@ -28,10 +46,12 @@ app.post('/', function(req, res) {
     res.header("Access-Control-Allow-Headers", "*");
     next(createError(404));
   });
+
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+  });
   
-app.listen(8080, function() {
-  console.log('Example app listening on port 3001!');
-});
+
 
 module.exports = app;
   
