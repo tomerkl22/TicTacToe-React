@@ -20,7 +20,7 @@ const Board = (props) => {
     const[board, setBoard] = useState(["","","","","","","","",""]);
     const[turn, setTurn] = useState(props.currTurn);
     const{addToHistory} = useContext(HistoryContext);
-
+    
     useEffect(() => {
         if(!winnerCheck())
            isTie();       
